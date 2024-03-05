@@ -110,33 +110,32 @@ def generate_gallery_rst(app):
         for workdir in [examples_dir, gallery_dir, mod_examples_dir]:
             if not os.path.exists(workdir):
                 os.makedirs(workdir)
-        # we create an index.rst with all examples
-        fhindex = open(os.path.join(gallery_dir, 'index.rst'), 'w')
-        # Here we don't use an os.walk, but we recurse only twice: flat is
-        # better than nested.
-        this_fhindex, this_computation_times = \
+        with open(os.path.join(gallery_dir, 'index.rst'), 'w') as fhindex:
+            # Here we don't use an os.walk, but we recurse only twice: flat is
+            # better than nested.
+            this_fhindex, this_computation_times = \
             generate_dir_rst(examples_dir, gallery_dir, gallery_conf,
-                             seen_backrefs)
+                                 seen_backrefs)
 
-        computation_times += this_computation_times
+            computation_times += this_computation_times
 
-        fhindex.write(this_fhindex)
-        for directory in sorted(os.listdir(examples_dir)):
-            if os.path.isdir(os.path.join(examples_dir, directory)):
-                src_dir = os.path.join(examples_dir, directory)
-                target_dir = os.path.join(gallery_dir, directory)
-                this_fhindex, this_computation_times = \
+            fhindex.write(this_fhindex)
+            for directory in sorted(os.listdir(examples_dir)):
+                if os.path.isdir(os.path.join(examples_dir, directory)):
+                    src_dir = os.path.join(examples_dir, directory)
+                    target_dir = os.path.join(gallery_dir, directory)
+                    this_fhindex, this_computation_times = \
                     generate_dir_rst(src_dir, target_dir, gallery_conf,
-                                     seen_backrefs)
-                fhindex.write(this_fhindex)
-                computation_times += this_computation_times
+                                         seen_backrefs)
+                    fhindex.write(this_fhindex)
+                    computation_times += this_computation_times
 
-        if gallery_conf['download_all_examples']:
-            download_fhindex = generate_zipfiles(gallery_dir)
-            fhindex.write(download_fhindex)
+            if gallery_conf['download_all_examples']:
+                download_fhindex = generate_zipfiles(gallery_dir)
+                fhindex.write(download_fhindex)
 
-        fhindex.write(SPHX_GLR_SIG)
-        fhindex.flush()
+            fhindex.write(SPHX_GLR_SIG)
+            fhindex.flush()
 
     # Back to initial directory
     os.chdir(working_dir)

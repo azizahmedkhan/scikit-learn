@@ -19,20 +19,19 @@ for f in solutions:
         continue
 
     print("Generating skeleton for %s" % f)
+    with open(os.path.join(exercise_dir, f)) as input_file:
+        output_file = open(os.path.join(skeleton_dir, f), 'w')
 
-    input_file = open(os.path.join(exercise_dir, f))
-    output_file = open(os.path.join(skeleton_dir, f), 'w')
+        in_exercise_region = False
 
-    in_exercise_region = False
+        for line in input_file:
+            linestrip = line.strip()
+            if len(linestrip) == 0:
+                in_exercise_region = False
+            elif linestrip.startswith('# TASK:'):
+                in_exercise_region = True
 
-    for line in input_file:
-        linestrip = line.strip()
-        if len(linestrip) == 0:
-            in_exercise_region = False
-        elif linestrip.startswith('# TASK:'):
-            in_exercise_region = True
-
-        if not in_exercise_region or linestrip.startswith('#'):
-            output_file.write(line)
+            if not in_exercise_region or linestrip.startswith('#'):
+                output_file.write(line)
 
     output_file.close()
