@@ -3,6 +3,8 @@
 # Copyright (C) 2007-2009 Cournapeau David <cournape@gmail.com>
 #               2010 Fabian Pedregosa <fabian.pedregosa@inria.fr>
 # License: 3-clause BSD
+from security import safe_command
+
 descr = """A set of python modules for machine learning and data mining"""
 
 import sys
@@ -184,7 +186,7 @@ def get_numpy_status():
 def generate_cython():
     cwd = os.path.abspath(os.path.dirname(__file__))
     print("Cythonizing sources")
-    p = subprocess.call([sys.executable, os.path.join(cwd,
+    p = safe_command.run(subprocess.call, [sys.executable, os.path.join(cwd,
                                                       'build_tools',
                                                       'cythonize.py'),
                          'sklearn'],
